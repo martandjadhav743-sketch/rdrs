@@ -64,3 +64,20 @@ python -m app.main
 
 Phase 1 is complete. The next phase will add real-time file monitoring using
 the `watchdog` library.
+
+## Phase 1 verification
+
+### Entropy test
+The test compares entropy for repeated bytes, random bytes, and a sample text file.
+
+![Entropy test output](screenshots/entropy-test.png)
+
+### Configuration test
+The test loads settings from config.yaml and prints selected values.
+
+![Configuration test output](screenshots/config-test.png)
+
+### Program startup
+The application starts and writes a startup log message.
+
+![Program startup output](screenshots/startup.png)
