@@ -1,0 +1,23 @@
+watched_folders:
+  - "./data/sandbox"
+
+monitor:
+  window_seconds: 60
+  sample_bytes: 65536
+
+thresholds:
+  modified_files_per_minute: 20
+  renames_per_minute: 10
+  extension_changes_per_minute: 10
+  average_entropy: 7.0
+
+scoring:
+  rapid_encryption: 40
+  mass_rename: 30
+  high_entropy: 25
+  cpu_spike: 15
+  unknown_program: 10
+
+response:
+  simulation_mode: true
+  quarantine_folder: "./data/quarantine"
