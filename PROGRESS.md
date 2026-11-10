@@ -31,3 +31,61 @@ Phase 2: Real-time file monitoring using watchdog.
 - Updated `app/main.py` to save process snapshots during startup.
 - Tested database creation, file-event storage, and process snapshots.
 - Added Phase 3 screenshots.
+
+## Phase 4: Sliding-Window Detection — Complete
+
+Phase 4 added sliding-window analysis for recent file activity.
+
+### What was completed
+
+- Created `app/detectors/window_detector.py`.
+- Added a `SlidingWindowDetector` class.
+- Configured the detector to analyse activity from the last 60 seconds.
+- Removed events older than 60 seconds.
+- Counted created, modified, deleted, and moved events.
+- Detected file extension changes.
+- Connected the detector to the live file monitor.
+- Added a sliding-window summary every 10 seconds.
+- Fixed moved-file events so the destination extension is used.
+- Added `test_window_detector.py` to verify old events are removed and event counts are correct.
+- Added a Phase 4 screenshot.
+- Updated the README with Phase 4 documentation.
+
+### Files added or updated
+
+```text
+app/detectors/window_detector.py
+app/detectors/file_monitor.py
+test_window_detector.py
+README.md
+screenshots/phase4-extension-change.png
+```
+
+### Test result
+
+The sliding-window test passed:
+
+```text
+PASS: Old event was removed correctly.
+PASS: Modified event count is correct.
+PASS: Extension change count is correct.
+```
+
+### Live monitoring result
+
+The live monitor successfully detected:
+
+- File creation.
+- File modification.
+- File renaming from `.txt` to `.locked`.
+- Extension change from `.txt` to `.locked`.
+
+The sliding-window summary correctly showed:
+
+```text
+'extension_changes': 1
+```
+
+### Next phase
+
+Phase 5 will add risk scoring and severity classification.
