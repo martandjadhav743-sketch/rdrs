@@ -1,107 +1,100 @@
-import os
 import time
-from datetime import datetime, timezone
-from pathlib import Path
 
-from watchdog.events import FileSystemEvent, FileSystemEventHandler
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
-from app.core.events import EventType, FileEvent
+from app.core.events import FileEvent
+from app.database.event_repository import save_file_event
+from app.detectors.window_detector import SlidingWindowDetector
 
+window_detector = SlidingWindowDetector(window_seconds=60)
 
 class RdrsFileHandler(FileSystemEventHandler):
-    """Convert Watchdog events into RDRS events and print them."""
-
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self):
         self.event_count = 0
 
-    def on_created(self, event: FileSystemEvent) -> None:
-        self._record_event(event, "created")
-
-    def on_modified(self, event: FileSystemEvent) -> None:
-        self._record_event(event, "modified")
-
-    def on_moved(self, event: FileSystemEvent) -> None:
-        self._record_event(event, "moved")
-
-    def on_deleted(self, event: FileSystemEvent) -> None:
-        self._record_event(event, "deleted")
-
-    def _record_event(
+    def create_event(
         self,
-        event: FileSystemEvent,
-        event_type: EventType,
-    ) -> None:
-        if event.is_directory:
-            return
-
-        source_path = os.fsdecode(event.src_path)
-        destination_path = None
-        previous_extension = None
-
-        if event_type == "moved":
-            destination_path = os.fsdecode(event.dest_path)
-            previous_extension = Path(source_path).suffix.lower()
-
-        current_path = destination_path or source_path
-
-        record = FileEvent(
-            event_type=event_type,
-            source_path=source_path,
-            timestamp=datetime.now(timezone.utc),
-            extension=Path(current_path).suffix.lower(),
-            destination_path=destination_path,
-            previous_extension=previous_extension,
-        )
-
+        event_type: str,
+        source_path: str,
+        destination_path: str | None = None,
+        extension: str | None = None,
+        previous_extension: str | None = None,
+    ) -> FileEvent:
         self.event_count += 1
 
-        path_description = record.source_path
-        if record.destination_path is not None:
-            path_description += f" -> {record.destination_path}"
+        event = FileEvent(
+            event_type=event_type,
+            source_path=source_path,
+            timestamp=__import__("datetime").datetime.now(__import__("datetime").timezone.utc),
+            extension=extension,
+            previous_extension=previous_extension,
+            destination_path=destination_path,
+        )
+        save_file_event(event)
+        window_detector.add_event(event)
 
         print(
-            f"[{record.timestamp.isoformat(timespec='seconds')}] "
-            f"{record.event_type.upper()} | {path_description} | "
-            f"extension={record.extension or '(none)'} | "
-            f"total={self.event_count}",
-            flush=True,
+            f"{event.timestamp.isoformat()} | {event_type} | {source_path}"
+            f"{' -> ' + destination_path if destination_path else ''}"
+            f" | extension={event.extension} | total={self.event_count}"
         )
-        import time
 
-from watchdog.observers import Observer
-def start_monitoring(folders: list[str]) -> None:
-    """Monitor configured folders until the user presses Ctrl + C."""
-    if not folders:
-        raise ValueError("No watched folders are configured.")
+        return event
 
-    paths = [Path(folder).resolve() for folder in folders]
+    def get_extension(self, path: str) -> str | None:
+        if "." not in path:
+            return None
 
-    for path in paths:
-        if not path.is_dir():
-            raise ValueError(
-                f"Watched folder does not exist or is not a directory: {path}"
+        return "." + path.rsplit(".", 1)[1].lower()
+
+    def on_created(self, event):
+        if not event.is_directory:
+            self.create_event("created", event.src_path)
+
+    def on_modified(self, event):
+        if not event.is_directory:
+            self.create_event("modified", event.src_path)
+
+    def on_deleted(self, event):
+        if not event.is_directory:
+            self.create_event("deleted", event.src_path)
+
+    def on_moved(self, event):
+        if not event.is_directory:
+            self.create_event(
+                "moved",
+                event.src_path,
+                destination_path=event.dest_path,
+                extension=self.get_extension(event.dest_path),
+                previous_extension=self.get_extension(event.src_path),
             )
 
-    handler = RdrsFileHandler()
-    observer = Observer()
 
-    for path in dict.fromkeys(paths):
-        observer.schedule(handler, str(path), recursive=True)
+def start_monitoring(folders: list[str]) -> None:
+    if not folders:
+        raise ValueError("At least one folder must be configured for monitoring.")
+
+    observer = Observer()
+    handler = RdrsFileHandler()
+
+    for folder in folders:
+        observer.schedule(handler, folder, recursive=True)
+        print(f"Watching folder: {folder}")
 
     observer.start()
 
-    print("\nRDRS is watching these folders:", flush=True)
-    for path in dict.fromkeys(paths):
-        print(f"  {path}", flush=True)
-
-    print("Press Ctrl + C to stop.\n", flush=True)
 
     try:
         while True:
-            time.sleep(1)
+            time.sleep(10)
+
+            summary = window_detector.get_window_summary()
+
+            print("Sliding window summary:")
+            print(summary)
     except KeyboardInterrupt:
-        print("\nStopping RDRS...", flush=True)
-    finally:
         observer.stop()
+        print("Monitoring stopped.")
+    finally:
         observer.join()
