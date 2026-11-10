@@ -68,4 +68,5 @@ the `watchdog` library.
 ## Phase 2: Real-time file monitoring
 
 RDRS monitors the configured sandbox folder and records file creation, modification, renaming, and deletion events.
-screenshots/screenshotsphase2-monitor.png
+phase2-monitor.png
+
