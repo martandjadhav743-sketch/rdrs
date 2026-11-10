@@ -88,4 +88,32 @@ The sliding-window summary correctly showed:
 
 ### Next phase
 
-Phase 5 will add risk scoring and severity classification.
+## Phase 5: Incident Response — Complete
+
+Phase 5 added a basic incident-response workflow.
+
+### What was completed
+
+- Created an `Incident` dataclass
+- Created `IncidentResponder`
+- Added Critical incident creation
+- Added alert logging
+- Added audit logging
+- Added safe quarantine copying
+- Connected incident response to the live monitor
+- Created and ran incident-response tests
+
+### Safety behaviour
+
+RDRS copies affected files into quarantine. It does not delete, encrypt, or modify original files.
+
+### Files added or updated
+
+- `app/detectors/incident_response.py`
+- `app/detectors/file_monitor.py`
+- `test_incident_response.py`
+- `test_incident_logs.py`
+
+### Status
+
+Phase 5 is complete.
