@@ -65,8 +65,56 @@ python -m app.main
 Phase 1 is complete. The next phase will add real-time file monitoring using
 the `watchdog` library.
 
-## Phase 2: Real-time file monitoring
+## Phase 2: Real-Time File Monitoring
 
-RDRS monitors the configured sandbox folder and records file creation, modification, renaming, and deletion events.
-phase2-monitor.png
+RDRS can monitor configured folders in real time.
 
+### Monitoring features
+
+- Detects file creation.
+- Detects file modification.
+- Detects file deletion.
+- Detects file renaming and movement.
+- Displays live event messages in the terminal.
+- Counts the total number of detected events.
+
+### Files added
+
+```text
+app/core/events.py
+app/detectors/file_monitor.py
+```
+
+### Phase 2 screenshot
+
+![Phase 2 file monitoring](screenshots/phase2-monitor.png)
+## Phase 3: SQLite Database and Process Snapshots
+
+RDRS now stores file events and process snapshots in an SQLite database.
+
+### Database features
+
+- Stores detected file events in the `file_events` table.
+- Stores process snapshots in the `process_snapshots` table.
+- Saves process information when RDRS starts.
+- Uses SQLAlchemy and SQLite.
+- Uses `psutil` to collect process information.
+
+### Files added
+
+```text
+app/database/models.py
+app/database/database.py
+app/database/event_repository.py
+app/database/process_repository.py
+```
+
+### Phase 3 screenshots
+
+![Phase 3 database test](screenshots/phase3-database-test.png)
+
+![Phase 3 database events](screenshots/phase3-database-events.png)
+
+![Phase 3 process snapshot](screenshots/phase3-process-snapshot.png)
+
+![Phase 3 startup process snapshot](screenshots/phase3-startup-process-snapshot.png)
