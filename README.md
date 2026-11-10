@@ -142,3 +142,39 @@ test_window_detector.py
 ### Phase 4 screenshot
 
 ![Phase 4 sliding-window detection](screenshots/phase4-extension-change.png)
+
+## Phase 5: Incident Response
+
+Phase 5 adds a basic incident-response workflow for Critical risk events.
+
+When the risk score reaches Critical, RDRS:
+
+- Creates an incident record
+- Writes an entry to `logs/alerts.log`
+- Copies affected files into `data/quarantine`
+- Writes an entry to `logs/audit.log`
+- Leaves the original files unchanged
+
+The response is designed to preserve evidence safely. It does not delete, encrypt, or modify original files.
+
+### Files added
+
+- `app/detectors/incident_response.py`
+- `test_incident_response.py`
+- `test_incident_logs.py`
+
+### Test results
+
+The incident-response test confirmed that:
+
+- A Critical incident can be created
+- An affected file can be copied to quarantine
+- The alert log is created
+- The audit log is created
+- The original file remains unchanged
+
+### Screenshots
+
+![Phase 5 incident response test](screenshots/phase5-incident-response.png)
+
+![Phase 5 incident logs test](screenshots/phase5-incident-logs.png)
