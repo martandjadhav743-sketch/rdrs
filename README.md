@@ -65,21 +65,8 @@ python -m app.main
 Phase 1 is complete. The next phase will add real-time file monitoring using
 the `watchdog` library.
 
-## Phase 1 verification
+## Phase 2: Real-time file monitoring
 
-### Entropy test
-The test compares entropy for repeated bytes, random bytes, and a sample text file.
+RDRS monitors the configured sandbox folder and records file creation, modification, renaming, and deletion events.
 
-![Entropy test output](screenshots/entropy-test.png)
-
-### Configuration test
-The test loads settings from config.yaml and prints selected values.
-
-![Configuration test output](screenshots/config-test.png)
-
-### Program startup
-The application starts and writes a startup log message.
-
-![Program startup output](screenshots/startup.png)
-
-
+![Phase 2 file monitoring](screenshots/phase2-monitor.png)
