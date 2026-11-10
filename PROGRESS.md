@@ -21,3 +21,13 @@ Phase 2: Real-time file monitoring using watchdog.
 - Updated `app/main.py` to start real-time monitoring.
 - Tested file creation, modification, renaming, and deletion in `data/sandbox`.
 - Added a Phase 2 monitoring screenshot.
+- 
+## Phase 3: SQLite database and process snapshots
+
+- Added SQLAlchemy database models for file events and process snapshots.
+- Created SQLite database storage in `data/rdrs.db`.
+- Added event repository to save live file-monitor events.
+- Added process repository to save process snapshots using psutil.
+- Updated `app/main.py` to save process snapshots during startup.
+- Tested database creation, file-event storage, and process snapshots.
+- Added Phase 3 screenshots.
