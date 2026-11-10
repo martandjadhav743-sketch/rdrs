@@ -118,3 +118,27 @@ app/database/process_repository.py
 ![Phase 3 process snapshot](screenshots/phase3-process-snapshot.png)
 
 ![Phase 3 startup process snapshot](screenshots/phase3-startup-process-snapshot.png)
+## Phase 4: Sliding-Window Detection
+
+RDRS now analyses file activity over the last 60 seconds.
+
+### Detection features
+
+- Stores recent file events in a sliding window.
+- Removes events older than 60 seconds.
+- Counts created, modified, deleted, and moved events.
+- Detects file extension changes.
+- Displays a sliding-window summary every 10 seconds.
+- Prepares activity data for risk scoring in the next phase.
+
+### Files added or updated
+
+```text
+app/detectors/window_detector.py
+app/detectors/file_monitor.py
+test_window_detector.py
+```
+
+### Phase 4 screenshot
+
+![Phase 4 sliding-window detection](screenshots/phase4-extension-change.png)
