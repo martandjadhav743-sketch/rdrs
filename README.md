@@ -86,4 +86,4 @@ The application starts and writes a startup log message.
 
 RDRS monitors the configured sandbox folder and records file creation, modification, renaming, and deletion events.
 
-![Phase 2 file monitoring](screenshots/phase2-monitor.png)
+![Phase 2 file monitoring](screenshots/phase2-monitor.png) 
