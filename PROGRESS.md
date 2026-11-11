@@ -117,3 +117,35 @@ RDRS copies affected files into quarantine. It does not delete, encrypt, or modi
 ### Status
 
 Phase 5 is complete.
+## Phase 6: FastAPI Backend — Complete
+
+Phase 6 added a FastAPI backend for RDRS.
+
+### What was completed
+
+- Installed FastAPI and Uvicorn
+- Created the `app/api` folder
+- Created API routes
+- Added `/health`
+- Added `/status`
+- Added `/alerts`
+- Added `/events`
+- Added `/reports`
+- Added `/scan`
+- Added `/settings`
+- Tested all endpoints through FastAPI documentation
+
+### Safety behaviour
+
+The POST endpoints accept requests and return responses. They do not delete, encrypt, or modify files.
+
+### Files added or updated
+
+- `app/api/__init__.py`
+- `app/api/routes.py`
+- `app/main.py`
+- `requirements.txt`
+
+### Status
+
+Phase 6 is complete.
