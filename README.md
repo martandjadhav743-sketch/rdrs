@@ -178,3 +178,34 @@ The incident-response test confirmed that:
 ![Phase 5 incident response test](screenshots/phase5-incident-response.png)
 
 ![Phase 5 incident logs test](screenshots/phase5-incident-logs.png)
+## Phase 6: FastAPI Backend
+
+Phase 6 adds a FastAPI backend for RDRS.
+
+### API endpoints
+
+- `GET /health`: Checks that the API is running.
+- `GET /status`: Returns monitoring and simulation status.
+- `GET /alerts`: Returns alert-log entries.
+- `GET /events`: Returns the latest 50 file events from SQLite.
+- `GET /reports`: Returns a summary of recent file events.
+- `POST /scan`: Accepts a scan request without modifying files.
+- `POST /settings`: Accepts safe settings without changing configuration.
+
+### API documentation
+
+FastAPI automatically provides documentation at:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### Safety
+
+The `/scan` and `/settings` endpoints only receive requests and return responses. They do not delete, encrypt, or modify files.
+
+### Screenshots
+
+![Phase 6 API health](screenshots/phase6-api-health.png)
+
+![Phase 6 API documentation](screenshots/phase6-api-docs.png)
