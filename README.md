@@ -237,3 +237,32 @@ CORS support was added to the FastAPI application so the dashboard can communica
 ### Dashboard screenshot
 
 ![Phase 7 dashboard](screenshots/phase7-dashboard.png)
+
+## Phase 8: Reports
+
+Phase 8 adds report generation to RDRS.
+
+Created `app/reports/report_generator.py`.
+
+The report generator creates a text report in the `data/reports` folder.
+
+Each report includes:
+
+- Total events
+- Created events
+- Modified events
+- Deleted events
+- Moved events
+- Total alerts
+
+Added a `/generate-report` API endpoint.
+
+The endpoint reads real file-event data from the SQLite database and saves a report file.
+
+Added a **Generate Report** button to the dashboard.
+
+The dashboard can generate a report through the API and display the report path.
+
+### Report screenshot
+
+![Phase 8 report](screenshots/phase8-report.png)
