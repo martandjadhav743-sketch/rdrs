@@ -209,3 +209,31 @@ The `/scan` and `/settings` endpoints only receive requests and return responses
 ![Phase 6 API health](screenshots/phase6-api-health.png)
 
 ![Phase 6 API documentation](screenshots/phase6-api-docs.png)
+
+## Phase 7: Dark Dashboard
+
+Phase 7 adds a dark-themed web dashboard for RDRS.
+
+The dashboard is stored in `frontend/index.html`.
+
+It includes four cards:
+
+- System Status
+- Alerts
+- File Events
+- Reports
+
+The dashboard connects to the RDRS API and displays:
+
+- API status
+- Monitoring status
+- Simulation mode
+- Alert records
+- Recent file events
+- Report summaries
+
+CORS support was added to the FastAPI application so the dashboard can communicate with the API.
+
+### Dashboard screenshot
+
+![Phase 7 dashboard](screenshots/phase7-dashboard.png)
