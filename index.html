@@ -74,6 +74,12 @@
     </div>
 
     <div class="card">
+        <h2>Generate Report</h2>
+        <p id="generate-report-text">Click the button to generate a report.</p>
+        <button onclick="generateReport()">Generate Report</button>
+    </div>
+
+    <div class="card">
         <h2>Reports</h2>
         <p id="reports-text">Click the button to load reports.</p>
         <button onclick="loadReports()">Load Reports</button>
@@ -151,6 +157,24 @@
                     "Moved events: " + data.moved_events;
             } catch (error) {
                 reportsText.textContent = "Could not load reports.";
+            }
+        }
+
+       async function generateReport() {
+            const reportText = document.getElementById("generate-report-text");
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/generate-report", {
+                    method: "POST"
+                });
+
+                const data = await response.json();
+
+                reportText.textContent =
+                    data.message + "\n" +
+                    "Report saved to: " + data.report_path;
+            } catch (error) {
+                reportText.textContent = "Could not generate report.";
             }
         }
     </script>
