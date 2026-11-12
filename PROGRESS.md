@@ -149,3 +149,27 @@ The POST endpoints accept requests and return responses. They do not delete, enc
 ### Status
 
 Phase 6 is complete.
+
+## Phase 7: Dark Dashboard
+
+Phase 7 is complete.
+
+Created a dark-themed dashboard in `frontend/index.html`.
+
+The dashboard includes:
+
+- System Status card
+- Alerts card
+- File Events card
+- Reports card
+
+The dashboard connects to the RDRS API and displays:
+
+- API status, monitoring status, and simulation mode
+- Alert records
+- Recent file events
+- Report summaries
+
+Added CORS support to the FastAPI application so the dashboard can communicate with the API.
+
+Screenshot: `screenshots/phase7-dashboard.png`
