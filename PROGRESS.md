@@ -208,3 +208,45 @@ Created and tested:
 - `test_generate_report.py`
 
 Screenshot: `screenshots/phase8-report.png`
+
+## Phase 9 — Automated Testing (In Progress)
+
+### Completed
+
+- Configured pytest.ini to run the verified automated test suite.
+- Added pytest and pytest-cov to the project dependencies.
+- Confirmed 33 tests pass together:
+  - Incident response: 8 tests.
+  - Risk scoring: 11 tests.
+  - Sliding-window detection: 12 tests.
+  - Detection-to-response integration: 2 tests.
+- Tested event and entropy expiration without waiting in real time.
+- Verified Critical activity creates an incident, evidence copy,
+  and response logs while preserving the original test file.
+- Verified Normal activity creates no incident or response artifacts.
+- Isolated incident-response and integration test files in temporary
+  directories.
+
+### Coverage Recorded
+
+- Risk scorer: 100% statement coverage.
+- Sliding-window detector: 100% statement coverage.
+- Incident responder: 98% statement coverage.
+- Last recorded application-wide coverage: 47%, including the
+  earlier configuration and entropy script runs.
+
+### Remaining
+
+- Add isolated API and database tests.
+- Add logging and application-startup tests.
+- Review known incident-response limitations:
+  - Simulation-disabled behavior.
+  - Quarantine filename collisions.
+- Reach and verify the approximately 90% application-wide
+  coverage target.
+
+### Run the Verified Suite
+
+python -m pytest
+
+
