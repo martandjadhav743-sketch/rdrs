@@ -336,4 +336,55 @@ htmlcov/index.html
 
 ![RDRS coverage report](screenshots/coverage-report.png)
 
+## Docker Deployment
+
+RDRS can run in Docker using Docker Compose.
+
+Build the Docker image:
+
+```cmd
+docker compose build
+```
+
+Start RDRS in the background:
+
+```cmd
+docker compose up -d
+```
+
+Check the running container:
+
+```cmd
+docker compose ps
+```
+
+View container logs:
+
+```cmd
+docker compose logs --tail=30
+```
+
+Open the API health endpoint:
+
+```text
+http://127.0.0.1:8000/health
+```
+
+The Docker container uses a polling file observer because native filesystem events may not be received reliably through Docker Desktop’s Windows bind mount.
+
+## Docker Screenshots
+
+### Docker Image Build
+
+![Docker image build](screenshots/phase10-docker-build.png)
+
+### Running Container
+
+![Running Docker container](screenshots/phase10-docker-running.png)
+
+### Docker File Monitoring
+
+![Docker file monitoring](screenshots/phase10-docker-monitoring.png)
+
+
 - 
