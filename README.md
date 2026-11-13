@@ -326,4 +326,14 @@ htmlcov/index.html
 - `test_window_detector.py`: sliding-window detection tests
 - `test_detection_pipeline.py`: detection pipeline integration tests
 
+- ## Testing Screenshots
+
+### Test Results
+
+![RDRS test results](screenshots/testing-results.png)
+
+### Coverage Report
+
+![RDRS coverage report](screenshots/coverage-report.png)
+
 - 
