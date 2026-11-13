@@ -243,3 +243,24 @@ Coverage results:
 The live file monitor is intentionally not fully covered by unit tests because it runs a continuous filesystem-watching loop. Its event handling was verified through live monitoring tests, while the detection, scoring, and response logic has strong automated coverage.
 
 
+## Phase 10 Completion: Docker and Docker Compose
+
+Phase 10 added Docker support for RDRS.
+
+Created files:
+
+- `Dockerfile`
+- `docker-compose.yml`
+- `.dockerignore`
+
+The Docker image uses Python 3.12 Slim, installs project requirements, copies the application and configuration, and starts the FastAPI server on port 8000.
+
+Docker Compose maps port 8000 and mounts the local `data` and `logs` folders into the container. The container uses the `RDRS_USE_POLLING` environment variable to enable Watchdog’s polling observer, allowing reliable file-event detection through Docker Desktop’s Windows bind mount.
+
+Verification:
+
+- Docker image built successfully.
+- Container `rdrs-api` started successfully.
+- API health endpoint responded with HTTP 200.
+- File monitoring detected a newly created test file inside the mounted sandbox folder.
+- Sliding-window metrics updated after the file event.
