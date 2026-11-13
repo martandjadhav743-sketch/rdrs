@@ -1,0 +1,16 @@
+name: rdrs
+
+services:
+  rdrs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rdrs-api
+    environment:
+      RDRS_USE_POLLING: "true"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped

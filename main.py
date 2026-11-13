@@ -1,3 +1,4 @@
+import threading
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -162,7 +163,12 @@ def startup_event():
     print(f"Simulation mode: {config.response.simulation_mode}")
     print(f"Process snapshots saved: {saved_count}")
 
-    start_monitoring(config.watched_folders)
+    monitoring_thread = threading.Thread(
+        target=start_monitoring,
+        args=(config.watched_folders,),
+        daemon=True,
+    )
+    monitoring_thread.start()
 
 
 @app.on_event("shutdown")

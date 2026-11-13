@@ -1,7 +1,10 @@
+import os
 import time
+from datetime import datetime, timezone
 
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
+from watchdog.observers.polling import PollingObserver
 
 from app.core.events import FileEvent
 from app.core.entropy import file_entropy
@@ -9,6 +12,7 @@ from app.database.event_repository import save_file_event
 from app.detectors.window_detector import SlidingWindowDetector
 from app.detectors.risk_scorer import RiskScorer
 from app.detectors.incident_response import IncidentResponder
+
 
 window_detector = SlidingWindowDetector(window_seconds=60)
 risk_scorer = RiskScorer(
@@ -22,6 +26,7 @@ incident_responder = IncidentResponder(
     quarantine_folder="data/quarantine",
     simulation_mode=True,
 )
+
 
 class RdrsFileHandler(FileSystemEventHandler):
     def __init__(self):
@@ -40,17 +45,23 @@ class RdrsFileHandler(FileSystemEventHandler):
         event = FileEvent(
             event_type=event_type,
             source_path=source_path,
-            timestamp=__import__("datetime").datetime.now(__import__("datetime").timezone.utc),
+            timestamp=datetime.now(timezone.utc),
             extension=extension,
             previous_extension=previous_extension,
             destination_path=destination_path,
         )
+
         save_file_event(event)
         window_detector.add_event(event)
 
+        destination_text = ""
+
+        if destination_path:
+            destination_text = f" -> {destination_path}"
+
         print(
             f"{event.timestamp.isoformat()} | {event_type} | {source_path}"
-            f"{' -> ' + destination_path if destination_path else ''}"
+            f"{destination_text}"
             f" | extension={event.extension} | total={self.event_count}"
         )
 
@@ -74,7 +85,6 @@ class RdrsFileHandler(FileSystemEventHandler):
                 entropy = 0.0
 
             window_detector.add_entropy(entropy)
-
             self.create_event("modified", event.src_path)
 
     def on_deleted(self, event):
@@ -94,9 +104,19 @@ class RdrsFileHandler(FileSystemEventHandler):
 
 def start_monitoring(folders: list[str]) -> None:
     if not folders:
-        raise ValueError("At least one folder must be configured for monitoring.")
+        raise ValueError(
+            "At least one folder must be configured for monitoring."
+        )
 
-    observer = Observer()
+    use_polling = (
+        os.environ.get("RDRS_USE_POLLING", "false").lower() == "true"
+    )
+
+    if use_polling:
+        observer = PollingObserver()
+    else:
+        observer = Observer()
+
     handler = RdrsFileHandler()
 
     for folder in folders:
@@ -105,13 +125,11 @@ def start_monitoring(folders: list[str]) -> None:
 
     observer.start()
 
-
     try:
         while True:
             time.sleep(10)
 
             summary = window_detector.get_window_summary()
-
 
             assessment = risk_scorer.assess(
                 window_summary=summary,
@@ -119,12 +137,12 @@ def start_monitoring(folders: list[str]) -> None:
                 cpu_percent=0.0,
             )
 
-
             print("Sliding window summary:")
             print(summary)
 
             print("Risk assessment:")
             print(assessment)
+
             if assessment["severity"] == "Critical":
                 affected_files = window_detector.get_affected_files()
 
@@ -136,8 +154,10 @@ def start_monitoring(folders: list[str]) -> None:
 
                 if incident is not None:
                     incident_responder.quarantine_files(incident)
+
     except KeyboardInterrupt:
         observer.stop()
         print("Monitoring stopped.")
+
     finally:
         observer.join()
