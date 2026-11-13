@@ -266,3 +266,64 @@ The dashboard can generate a report through the API and display the report path.
 ### Report screenshot
 
 ![Phase 8 report](screenshots/phase8-report.png)
+
+## Testing
+
+RDRS includes automated tests for configuration, entropy calculation, database storage, API endpoints, report generation, detection logic, risk scoring, and incident response.
+
+Run the complete test suite:
+
+```cmd
+python -m pytest --cov=app --cov-report=term-missing
+```
+
+Current result:
+
+```text
+87 passed
+Overall coverage: 89%
+```
+
+Coverage highlights:
+
+- `app/api/routes.py`: 100%
+- `app/core/config.py`: 100%
+- `app/core/entropy.py`: 100%
+- `app/core/events.py`: 100%
+- `app/core/logging_setup.py`: 100%
+- `app/database/*`: 100%
+- `app/detectors/risk_scorer.py`: 100%
+- `app/detectors/window_detector.py`: 100%
+- `app/detectors/incident_response.py`: 98%
+- `app/main.py`: 95%
+- `app/detectors/file_monitor.py`: 30%
+
+The file monitor has lower coverage because its main function continuously watches the filesystem. Its event-handling behavior is exercised during live testing, while the remaining detection and response logic is covered by automated tests.
+
+To create an HTML coverage report:
+
+```cmd
+python -m pytest --cov=app --cov-report=html
+```
+
+Open:
+
+```text
+htmlcov/index.html
+```
+
+## Test Files
+
+- `test_config.py`: original configuration tests
+- `test_entropy.py`: original entropy tests
+- `test_core.py`: expanded configuration and entropy tests
+- `test_database.py`: original database smoke test
+- `test_database_isolated.py`: isolated database, event, and process repository tests
+- `test_api.py`: API endpoint tests
+- `test_startup.py`: startup, shutdown, report-generation, and model tests
+- `test_incident_response.py`: incident response tests
+- `test_risk_scorer.py`: weighted risk scoring tests
+- `test_window_detector.py`: sliding-window detection tests
+- `test_detection_pipeline.py`: detection pipeline integration tests
+
+- 
